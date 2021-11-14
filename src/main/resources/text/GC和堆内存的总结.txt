@@ -1,0 +1,28 @@
+GC：
+ java -XX:+UseSerialGC GCLogAnalysis:指定GC方式（串行日志）
+-Xms512m -Xmx512m：指定堆内存的大小
+-Xloggc:gc：指定垃圾回收打印日志文件
+-XX:+PrintGCDetails：打印GC详细信息
+-XX:+PrintGCDateStamps：打印GC时间信息
+串行化垃圾回收：单线程，回收效率较低
+java -XX:+UseParallelGC GCLogAnalysis
+并行化垃圾回收：多线程，随着堆内存的增加垃圾回收暂停时间会增长。
+java -XX:+UseConcMarkSweepGC
+cms垃圾回收：针对老年代，但可能会发生一次或多次YoungGC的回收
+java -XX:+UseG1GC
+G1垃圾回收：可能会产生fullgc而导致GC出现退化成UseSerialGC的情况
+堆内存分析：
+1、一个JVM实例只存在一个堆内存，堆也是Java内存管理的核心区域
+2、Java堆区在JVM启动时就被创建，其空间大小也就确定了。是JVM管理的最大的一块内存空间
+3、堆是GC执行垃圾回收的重点区域。
+4、OutOfMemoryError: Java heap space
+     创建新的对象时，堆内存中的空间不足以存放新创建的对象
+5、超出预期的访问量/数据量 
+      内存泄露(Memory leak)
+6、java.lang.OutOfMemoryError: PermGen space 的主要原因，是加载到内存中的类数量      太多或
+    体积太大，超过了 PermGen 区的大小。
+    解决办法：增大 PermGen/Metaspace
+   -XX:MaxPermSize=512m
+   -XX:MaxMetaspaceSize=512m
+
+
